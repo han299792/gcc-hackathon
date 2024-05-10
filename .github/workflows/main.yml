@@ -25,7 +25,7 @@ jobs:
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
         script: |
           source my_env/bin/activate
-          cd /gcc-hackathon
+          cd gcc-hackathon
           git pull
           python manage.py migrate
           pkill gunicorn
