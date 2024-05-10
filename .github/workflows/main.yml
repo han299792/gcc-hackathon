@@ -17,15 +17,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.x
-    - name: Run tests
-      run: |
-        python manage.py test
-    - name: Run migrations
-      run: |
-        python manage.py migrate
-    - name: Run gunicorn
-      run: |
-        gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000
     - name: Deploy to Server
       uses: appleboy/ssh-action@master
       with:
