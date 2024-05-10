@@ -1,0 +1,8 @@
+nohup: gunicorn: No such file or directory
+[2024-05-10 13:05:03 +0900] [58326] [INFO] Starting gunicorn 22.0.0
+[2024-05-10 13:05:03 +0900] [58326] [INFO] Listening at: http://0.0.0.0:8000 (58326)
+[2024-05-10 13:05:03 +0900] [58326] [INFO] Using worker: sync
+[2024-05-10 13:05:03 +0900] [58330] [INFO] Booting worker with pid: 58330
+[2024-05-10 13:05:12 +0900] [58326] [INFO] Handling signal: int
+[2024-05-10 04:05:12 +0000] [58330] [INFO] Worker exiting (pid: 58330)
+[2024-05-10 13:05:12 +0900] [58326] [INFO] Shutting down: Master
