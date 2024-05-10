@@ -27,7 +27,6 @@ jobs:
           source my_env/bin/activate
           cd /gcc-hackathon
           git pull
-          pip install -r requirements.txt
           python manage.py migrate
           pkill gunicorn
           nohup gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000
