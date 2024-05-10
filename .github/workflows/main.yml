@@ -1,0 +1,45 @@
+
+name: Django CI/CD Pipeline
+
+on:
+  push:
+    branches: [ production ]
+  pull_request:
+    branches: [ production ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Run tests
+      run: |
+        python manage.py test
+    - name: Run migrations
+      run: |
+        python manage.py migrate
+    - name: Run gunicorn
+      run: |
+        gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.LIGHTSAIL_HOST }}
+        username: ${{ secrets.LIGHTSAIL_USERNAME }}
+        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+        script: |
+          cd /gcc-hackathon
+          git pull
+          pip install -r requirements.txt
+          python manage.py migrate
+          pkill gunicorn
+          nohup gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000
