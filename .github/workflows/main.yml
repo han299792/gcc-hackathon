@@ -24,6 +24,7 @@ jobs:
         username: ${{ secrets.LIGHTSAIL_USERNAME }}
         key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
         script: |
+          source my_env/bin/activate
           cd /gcc-hackathon
           git pull
           pip install -r requirements.txt
