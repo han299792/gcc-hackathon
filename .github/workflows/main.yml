@@ -25,9 +25,8 @@ jobs:
         script: |
           source my_env/bin/activate
           cd gcc-hackathon
+          git stash
           git pull
           pip install -r requirements.txt
           python manage.py makemigrations --merge
-          pkill gunicorn
-          gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000 & disown
-
+          sudo systemctl restart my_gunicorn_service
