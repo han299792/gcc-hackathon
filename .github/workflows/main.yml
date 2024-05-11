@@ -29,4 +29,4 @@ jobs:
           git pull
           pip install -r requirements.txt
           python manage.py makemigrations --merge
-          sudo systemctl restart my_gunicorn_service
+          gunicorn gccHackathon.wsgi:application --bind 0.0.0.0:8000 & disown
