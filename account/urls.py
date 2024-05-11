@@ -7,4 +7,3 @@ urlpatterns =[
     path('signup/',views.RegisterAPIView.as_view()),
     #로그인 화면
     path('auth/',views.AuthAPIView.as_view()),
- ]
