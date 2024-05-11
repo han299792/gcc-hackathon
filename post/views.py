@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime, timedelta
-import json
+import json, string
 
 
 
@@ -74,8 +74,15 @@ def place_get_in_spot(request):
     return JsonResponse(serializer.error, status = 400)
 
 class PostsLastMonthAPIView(APIView):
-    def get(self, year, month):
+    def get(self, request, pk):
+        # Ensure pk is a string
+        year_month = str(pk)  # Use str() for conversion
 
+        # Convert year and month to integers
+        print(year_month)
+        year, month = int(year_month[:4]), int(year_month[4:])
+
+        # Calculate the first and last day of the month
         first_day_of_month = datetime(year, month, 1)
         if month == 12:
             first_day_of_next_month = datetime(year + 1, 1, 1)
@@ -83,11 +90,10 @@ class PostsLastMonthAPIView(APIView):
             first_day_of_next_month = datetime(year, month + 1, 1)
         last_day_of_month = first_day_of_next_month - timedelta(days=1)
 
-        # 입력받은 월에 생성된 포스트들만 가져오기
-        posts_for_month = post.objects.filter(created_at__gte=first_day_of_month,
-                                            created_at__lte=last_day_of_month)
+        # Fetch posts created within the specified month
+        posts_for_month = post.objects.filter(created_date__gte=first_day_of_month,
+                                              created_date__lte=last_day_of_month)
 
-        # 시리얼라이즈하여 반환
+        # Serialize the posts and return the response
         serializer = postSerializer(posts_for_month, many=True)
         return Response(serializer.data)
-
