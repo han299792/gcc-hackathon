@@ -3,5 +3,5 @@ from . import views
 from rest_framework import urls
 
 urlpatterns =[
-    path('add/', views.post_add)
+    path('posts/', views.post_add)
  ]
