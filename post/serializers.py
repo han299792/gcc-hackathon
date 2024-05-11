@@ -9,7 +9,7 @@ class postSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = post
-        fields = ['id', 'user_id', 'place_id', 'mood_status', 'title', 'content', 'photo', 'mood_tag']
+        fields = ['id', 'user_id', 'place_id', 'mood_status', 'title', 'content', 'photo']
 
     def get_posts_last_month(self):
         # 한 달 전의 날짜 계산
@@ -27,7 +27,6 @@ class postSerializer(serializers.ModelSerializer):
             mood_status=validated_data['mood_status'],
             title=validated_data['title'],
             content = validated_data['content'],
-            mood_tag=validated_data['mood_tag'],
             photo=validated_data['photo']
         )
         posting.save()
@@ -35,7 +34,7 @@ class postSerializer(serializers.ModelSerializer):
 
 class placeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = post
+        model = place
         fields = ['id', 'explanation', 'place_name', 'lat', 'lng', 'place_tag', 'photo']
         
 class placeTagSerializer(serializers.ModelSerializer):
