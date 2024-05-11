@@ -36,5 +36,5 @@ class postSerializer(serializers.ModelSerializer):
 class placeSerializer(serializers.ModelSerializer):
     class Meta:
         model = post
-        fields = ['id', 'place_name', 'lat', 'lng', 'place_tag', 'photo']
+        fields = ['id', 'explanation', 'place_name', 'lat', 'lng', 'place_tag', 'photo']
         
