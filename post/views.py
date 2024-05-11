@@ -13,36 +13,29 @@ from datetime import datetime, timedelta
 
 # Create your views here.
 class posts(APIView):
-    
     def get_object(self, pk):
         try:
             return post.objects.get(pk=pk)
         except post.DoesNotExist:
             raise status.HTTP_404_NOT_FOUND
 
-    @csrf_exempt
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = postSerializer(post)
         return Response(serializer.data)
     
-    @csrf_exempt
     def post(self, request):
         serializer = postSerializer(data=request.data)
         if(serializer.is_valid(raise_exception=True)):
             serializer.save()
-            return Response(serializer.data, safe=False)
-        else:
-            print('serializer isn''t valid')
+            return Response(serializer.data)
         return Response(serializer.errors, status = 400)
     
-    @csrf_exempt    
     def delete(self, request, pk, format=None):
         post = self.get_object(pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-    @csrf_exempt    
     def put(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = postSerializer(post, data=request.data)
@@ -52,13 +45,19 @@ class posts(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #사용자 요청시 db에서 위치값을 리턴해줌  
-@api_view(['GET'])
-def place_get_in_map(request):
-    data = place.objects.filter(posts.exists)
-    serializer = placeSerializer(data)
-    if(serializer.is_valid):
-        return JsonResponse(serializer.data)
-    return JsonResponse(serializer.error, status = 400)
+class PlacesView(APIView):
+    def get(self, request):
+        data = place.objects.filter(posts.exists)
+        serializer = placeSerializer(data)
+        if(serializer.is_valid()):
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.error, status = 400)
+    def post(self, request):
+        serializer = placeSerializer(data = request.data)
+        if(serializer.is_valid()):
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 def place_get_in_spot(request, pk):
