@@ -3,6 +3,5 @@ from . import views
 from rest_framework import urls
 
 urlpatterns =[
-    path('post/add/', views.UserCreate.as_view()),
-    path('api-auth/', include('rest_framework.urls')),
+    path('add/', views.post_add)
  ]
