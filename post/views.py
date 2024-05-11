@@ -4,9 +4,11 @@ from django.shortcuts import render
 from post.models import post, place
 from rest_framework.views import APIView
 from post.serializers import postSerializer, placeSerializer
+from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
+from datetime import datetime, timedelta
 import json
 
 
@@ -75,8 +77,20 @@ def place_get_in_spot(request, pk):
     return JsonResponse(serializer.error, status = 400)
 
 class PostsLastMonthAPIView(APIView):
-    def get(self, request, format=None):
-        serializer = postSerializer()
-        last_month_posts_data = serializer.get_posts_last_month()
-        return Response(last_month_posts_data, status=status.HTTP_200_OK)
+    def get(self, year, month):
+
+        first_day_of_month = datetime(year, month, 1)
+        if month == 12:
+            first_day_of_next_month = datetime(year + 1, 1, 1)
+        else:
+            first_day_of_next_month = datetime(year, month + 1, 1)
+        last_day_of_month = first_day_of_next_month - timedelta(days=1)
+
+        # 입력받은 월에 생성된 포스트들만 가져오기
+        posts_for_month = post.objects.filter(created_at__gte=first_day_of_month,
+                                            created_at__lte=last_day_of_month)
+
+        # 시리얼라이즈하여 반환
+        serializer = postSerializer(posts_for_month, many=True)
+        return Response(serializer.data)
 
