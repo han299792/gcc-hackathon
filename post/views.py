@@ -10,6 +10,7 @@ from rest_framework import status
 import json
 
 
+
 # Create your views here.
 class posts(APIView):
     
@@ -51,7 +52,8 @@ class posts(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#사용자 요청시 db에서 위치값을 리턴해줌    
+#사용자 요청시 db에서 위치값을 리턴해줌  
+@api_view(['GET'])
 def place_get_in_map(request):
     data = place.objects.all()
     serializer = placeSerializer(data)
@@ -59,7 +61,8 @@ def place_get_in_map(request):
         serializer.save()
         return JsonResponse(serializer.data)
     return JsonResponse(serializer.error, status = 400)
-    
+#spot을 눌렀을때 post값을 반환     
+@api_view(['GET'])
 def place_get_in_spot(request):
     data = post.objects.all()
     serializer = postSerializer()
@@ -73,3 +76,4 @@ class PostsLastMonthAPIView(APIView):
         serializer = postSerializer()
         last_month_posts_data = serializer.get_posts_last_month()
         return Response(last_month_posts_data, status=status.HTTP_200_OK)
+
