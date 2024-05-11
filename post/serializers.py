@@ -21,7 +21,7 @@ class postSerializer(serializers.ModelSerializer):
         return serializer.data
 
     def create(self, validated_data):
-        post = post.objects.create(
+        posting = post.objects.create(
             user_id=validated_data['user_id'],
             place_id=validated_data['place_id'],
             mood_status=validated_data['mood_status'],
@@ -30,8 +30,8 @@ class postSerializer(serializers.ModelSerializer):
             mood_tag=validated_data['mood_tag'],
             photo=validated_data['photo']
         )
-        post.save()
-        return post
+        posting.save()
+        return posting
 
 class placeSerializer(serializers.ModelSerializer):
     class Meta:
