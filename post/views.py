@@ -9,8 +9,6 @@ from rest_framework.response import Response
 from rest_framework import status
 import json
 
-
-
 # Create your views here.
 class posts(APIView):
     
