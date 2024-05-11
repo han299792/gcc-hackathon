@@ -18,7 +18,6 @@ class place(models.Model):
     lat = models.FloatField()
     lng = models.FloatField()
     place_tag = models.ForeignKey(place_tag, null = True, on_delete=models.SET_NULL)
-    mood_tag = models.ForeignKey(mood_tag, null = True, on_delete=models.SET_NULL)
     photo = models.ImageField(upload_to="", blank=True)
 
 
@@ -31,4 +30,3 @@ class post(models.Model):
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=100000)
     photo = models.ImageField(upload_to="", blank=True)
-    mood_tag = models.ForeignKey(mood_tag, null=True, on_delete=models.SET_NULL)
