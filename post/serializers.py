@@ -40,7 +40,7 @@ class placeSerializer(serializers.ModelSerializer):
         
 class placeTagSerializer(serializers.ModelSerializer):
     class Meta:
-        model = place
+        model = place_tag
         fields = '__all__'
 
 class moodStatusSerializer(serializers.ModelSerializer):
