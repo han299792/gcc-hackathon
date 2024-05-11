@@ -11,8 +11,6 @@ from rest_framework import status
 from datetime import datetime, timedelta
 import json, string
 
-
-
 # Create your views here.
 class posts(APIView):
     
@@ -62,7 +60,7 @@ class posts(APIView):
 #사용자 요청시 db에서 위치값을 리턴해줌  
 @api_view(['GET'])
 def place_get_in_map(request):
-    data = place.objects.all()
+    data = place.objects.filter(posts.exists)
     serializer = placeSerializer(data)
     if(serializer.is_valid):
         return JsonResponse(serializer.data)
@@ -100,3 +98,22 @@ class PostsLastMonthAPIView(APIView):
         # Serialize the posts and return the response
         serializer = postSerializer(posts_for_month, many=True)
         return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def global_place_get(request):
+    data = place.objects.all()
+    serializer = placeSerializer(data)
+    if(serializer.is_valid):
+        return JsonResponse(serializer.data)
+    return JsonResponse(serializer.error, status = 400)
+
+@api_view(['GET'])
+def global_place_get_detail(request, pk):
+    data = post.objects.filter(posts_id=pk)
+    serializer = postSerializer(data)
+    if(serializer.is_valid):
+        return JsonResponse(serializer.data)
+    return JsonResponse(serializer.error, status = 400)
+
