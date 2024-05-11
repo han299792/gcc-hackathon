@@ -3,7 +3,7 @@ from rest_framework.parsers import JSONParser
 from django.shortcuts import render
 from post.models import post, place
 from rest_framework.views import APIView
-from post.serializers import postSerializer, placeSerializer
+from post.serializers import postSerializer, placeSerializer, moodStatusSerializer, placeTagSerializer
 from rest_framework.decorators import api_view
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
@@ -21,12 +21,12 @@ class posts(APIView):
             raise status.HTTP_404_NOT_FOUND
 
     @csrf_exempt
-
     def get(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = postSerializer(post)
         return Response(serializer.data)
     
+    @csrf_exempt
     def post(self, request):
         # try:
         #     data = json.loads(request.body)
@@ -42,13 +42,14 @@ class posts(APIView):
         else:
             print('serializer isn''t valid')
         return Response(error, status = 400)
-
     
+    @csrf_exempt    
     def delete(self, request, pk, format=None):
         post = self.get_object(pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+    @csrf_exempt    
     def put(self, request, pk, format=None):
         post = self.get_object(pk)
         serializer = postSerializer(post, data=request.data)
@@ -117,3 +118,9 @@ def global_place_get_detail(request, pk):
         return JsonResponse(serializer.data)
     return JsonResponse(serializer.error, status = 400)
 
+class MoodStatusView(APIView):
+    def POST(self, request):
+        serializer = moodStatusSerializer(data=request.data)
+        if(serializer.is_valid):
+            serializer.save()
+        return Response(serializer.data)
