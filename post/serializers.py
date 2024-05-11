@@ -1,8 +1,12 @@
 from rest_framework import serializers
 from post.models import post, mood_status, place_tag, place
 from datetime import datetime, timedelta
+from drf_extra_fields.fields import Base64ImageField
+
 
 class postSerializer(serializers.ModelSerializer):
+    photo = Base64ImageField()
+
     class Meta:
         model = post
         fields = ['id', 'user_id', 'place_id', 'mood_status', 'title', 'content', 'photo', 'mood_tag']
@@ -15,6 +19,19 @@ class postSerializer(serializers.ModelSerializer):
         # 시리얼화하여 반환
         serializer = self.__class__(posts_last_month, many=True)
         return serializer.data
+
+    def create(self, validated_data):
+        post = post.objects.create(
+            user_id=validated_data['user_id'],
+            place_id=validated_data['place_id'],
+            mood_status=validated_data['mood_status'],
+            title=validated_data['title'],
+            content = validated_data['content'],
+            mood_tag=validated_data['mood_tag'],
+            photo=validated_data['photo']
+        )
+        post.save()
+        return post
 
 class placeSerializer(serializers.ModelSerializer):
     class Meta:

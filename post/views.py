@@ -7,11 +7,8 @@ from post.serializers import postSerializer, placeSerializer
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework import status
+import json
 
-
-# 캘린더
-# -> 최근 한 달 posts 불러오기
-# -> 날짜 
 
 # Create your views here.
 class posts(APIView):
@@ -30,11 +27,15 @@ class posts(APIView):
         return Response(serializer.data)
     
     def post(self, request):
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'detail': 'Invalid JSON format'}, status=400)
         data = JSONParser().parse(request)
         serializer = postSerializer(data=data)
         if(serializer.is_valid()):
             serializer.save()
-            return JsonResponse(serializer.data)
+            return JsonResponse(serializer.data, safe=False)
         return JsonResponse('post request error', status = 400)
     
     def delete(self, request, pk, format=None):
