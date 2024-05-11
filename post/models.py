@@ -30,6 +30,6 @@ class post(models.Model):
     mood_status = models.ForeignKey(mood_status, null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100)
     content = models.CharField(max_length=100000)
-    photo = models.ImageField()
+    photo = models.ImageField(null=True)
     mood_tag = models.ForeignKey(mood_tag, null=True, on_delete=models.SET_NULL)
 
