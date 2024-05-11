@@ -23,6 +23,12 @@ class posts(APIView):
             raise status.HTTP_404_NOT_FOUND
 
     @csrf_exempt
+
+    def get(self, request, pk, format=None):
+        post = self.get_object(pk)
+        serializer = postSerializer(post)
+        return Response(serializer.data)
+    
     def post(self, request):
         data = JSONParser().parse(request)
         serializer = postSerializer(data=data)
@@ -60,3 +66,9 @@ def place_get_in_spot(request):
         serializer.save()
         return JsonResponse(serializer.data)
     return JsonResponse(serializer.error, status = 400)
+
+class PostsLastMonthAPIView(APIView):
+    def get(self, request, format=None):
+        serializer = postSerializer()
+        last_month_posts_data = serializer.get_posts_last_month()
+        return Response(last_month_posts_data, status=status.HTTP_200_OK)
