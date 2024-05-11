@@ -28,20 +28,13 @@ class posts(APIView):
     
     @csrf_exempt
     def post(self, request):
-        # try:
-        #     data = json.loads(request.body)
-        # except json.JSONDecodeError:
-        #     return JsonResponse({'detail': 'Invalid JSON format'}, status=400)
-        # data = JSONParser().parse(request)
-        error = {"error" : "error"}
         serializer = postSerializer(data=request.data)
         if(serializer.is_valid(raise_exception=True)):
-            print('serializer is valid')
             serializer.save()
             return Response(serializer.data, safe=False)
         else:
             print('serializer isn''t valid')
-        return Response(error, status = 400)
+        return Response(serializer.errors, status = 400)
     
     @csrf_exempt    
     def delete(self, request, pk, format=None):
@@ -100,8 +93,6 @@ class PostsLastMonthAPIView(APIView):
         serializer = postSerializer(posts_for_month, many=True)
         return Response(serializer.data)
 
-
-
 @api_view(['GET'])
 def global_place_get(request):
     data = place.objects.all()
@@ -119,8 +110,15 @@ def global_place_get_detail(request, pk):
     return JsonResponse(serializer.error, status = 400)
 
 class MoodStatusView(APIView):
-    def POST(self, request):
+    def post(self, request):
         serializer = moodStatusSerializer(data=request.data)
-        if(serializer.is_valid):
+        if(serializer.is_valid()):
+            serializer.save()
+        return Response(serializer.data)
+
+class PlaceTagView(APIView):
+    def post(self, request):
+        serializer = placeTagSerializer(data=request.data)
+        if(serializer.is_valid()):
             serializer.save()
         return Response(serializer.data)

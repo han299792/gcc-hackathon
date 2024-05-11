@@ -11,5 +11,7 @@ urlpatterns =[
     path('personal/places/', views.place_get_in_map),
     path('personal/places/<int:pk>/', views.place_get_in_spot),
     path('global/places/', views.global_place_get),
-    path('global/places/<int:pk>/', views.global_place_get_detail)
+    path('global/places/<int:pk>/', views.global_place_get_detail),
+    path('places/tag/', views.PlaceTagView.as_view()),
+    path('posts/mood/', views.MoodStatusView.as_view())
 ]
