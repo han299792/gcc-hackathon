@@ -3,18 +3,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, nickname, name, password=None):
+    def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('email을 입력하세요')
         user = self.model(
-            email = self.normalize_email(email),
-            nickname = nickname, 
-            name = name,
+            email = self.normalize_email(email), 
+            username = username,
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
-    def create(self, email, nickname, name, password=None) -> Any:
+    def create_superuser(self, email, nickname, name, password=None):
         user = self.create_user(
             email,
             password = password,
@@ -27,17 +26,16 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True)
     email = models.EmailField(default='', max_length=100, null=False, blank=False, unique=True)
-    nickname = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
-    name = models.CharField(default='', max_length=100, null=False, blank=False)
+    username = models.CharField(default='', max_length=100, null=False, blank=False, unique=True)
 
     is_active = models.BooleanField(default=True)    
     is_admin = models.BooleanField(default=False)
     
     objects = UserManager()
 
-    USERNAME_FIELD = 'nickname'
+    USERNAME_FIELD = 'username'
     
-    REQUIRED_FIELDS = ['email', 'name']
+    REQUIRED_FIELDS = ['email', 'username']
 
     def __str__(self):
-        return self.nickname
+        return self.username
