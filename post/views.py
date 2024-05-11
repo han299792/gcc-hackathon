@@ -27,16 +27,21 @@ class posts(APIView):
         return Response(serializer.data)
     
     def post(self, request):
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({'detail': 'Invalid JSON format'}, status=400)
-        data = JSONParser().parse(request)
-        serializer = postSerializer(data=data)
-        if(serializer.is_valid()):
+        # try:
+        #     data = json.loads(request.body)
+        # except json.JSONDecodeError:
+        #     return JsonResponse({'detail': 'Invalid JSON format'}, status=400)
+        # data = JSONParser().parse(request)
+        error = {"error" : "error"}
+        serializer = postSerializer(data=request.data)
+        if(serializer.is_valid(raise_exception=True)):
+            print('serializer is valid')
             serializer.save()
-            return JsonResponse(serializer.data, safe=False)
-        return JsonResponse('post request error', status = 400)
+            return Response(serializer.data, safe=False)
+        else:
+            print('serializer isn''t valid')
+        return Response(error, status = 400)
+
     
     def delete(self, request, pk, format=None):
         post = self.get_object(pk)
@@ -59,12 +64,11 @@ def place_get_in_map(request):
         serializer.save()
         return JsonResponse(serializer.data)
     return JsonResponse(serializer.error, status = 400)
-    
-def place_get_in_spot(request):
-    data = post.objects.all()
-    serializer = postSerializer()
+
+def place_get_in_spot(request, pk):
+    data = post.objects.filter(posts_id=pk)
+    serializer = postSerializer(data)
     if(serializer.is_valid):
-        serializer.save()
         return JsonResponse(serializer.data)
     return JsonResponse(serializer.error, status = 400)
 
