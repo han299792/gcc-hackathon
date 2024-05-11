@@ -38,3 +38,12 @@ class placeSerializer(serializers.ModelSerializer):
         model = post
         fields = ['id', 'explanation', 'place_name', 'lat', 'lng', 'place_tag', 'photo']
         
+class placeTagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = place
+        fields = '__all__'
+
+class moodStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = mood_status
+        fields = '__all__'
