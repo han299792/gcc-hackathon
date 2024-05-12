@@ -11,7 +11,7 @@ from gccHackathon.settings import SECRET_KEY
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+
 
 # 회원가입
 class signupView(APIView):
@@ -50,14 +50,21 @@ class UpdateUser(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class LogoutView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
-            # request.data에서 refresh 토큰 추출
-            hrefresh_token = request.data.get("refresh_token")
-            #token = free(refresh_token)
-
-            # 토큰 블랙리스트 처리
-            token.blacklist()
-
+        # Extract refresh token from request data
+        refresh_token = request.data.get("refresh_token")
+        if refresh_token:
+            # Attempt to decode the token and add it to the blacklist
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except Exception as e:
+                # Handle exceptions if token is invalid or other errors occur
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            
             return Response(status=status.HTTP_205_RESET_CONTENT)
-    
+        else:
+            # No refresh token provided in the request
+            return Response({'error': 'No refresh token provided'}, status=status.HTTP_400_BAD_REQUEST)

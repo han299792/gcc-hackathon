@@ -6,7 +6,7 @@ urlpatterns =[
     #회원가입 화면
     path('signup/',views.RegisterAPIView.as_view()),
     #로그인 화면
-    path('api/register/', views.CreateUser.as_view(), name='register'),
-    path('api/login/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/update/', views.UpdateUser.as_view(), name='update_user'),
+    path('auth/login/', views.loginUser.as_view(), name='loginUser'),
+    path('auth/update/', views.UpdateUser.as_view(), name='UpdateUser'),
+    path('auth/logout/', views.logoutUser.as_view(), name='logoutUser'),
 ]
