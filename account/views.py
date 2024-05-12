@@ -41,6 +41,8 @@ class loginUser(TokenObtainPairSerializer):
         return token
 
 class UpdateUser(APIView):
+    permission_classes = [IsAuthenticated] 
+
     def put(self, request):
         user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
@@ -48,8 +50,7 @@ class UpdateUser(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-class LogoutView(APIView):
+class logoutUser(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
